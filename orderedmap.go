@@ -1,17 +1,17 @@
 package orderedmap
 
-import list "github.com/bahlo/generic-list-go"
+import "container/list"
 
 type OrderedMap[K comparable, V any] struct {
 	pairs map[K]*pair[K, V]
-	list  *list.List[*pair[K, V]]
+	list  *list.List
 }
 
 type pair[K comparable, V any] struct {
 	Key   K
 	Value V
 
-	element *list.Element[*pair[K, V]]
+	element *list.Element
 }
 
 // New creates a new ordered map.
@@ -24,7 +24,7 @@ func New[K comparable, V any]() *OrderedMap[K, V] {
 func WithCapacity[K comparable, V any](n int) *OrderedMap[K, V] {
 	return &OrderedMap[K, V]{
 		pairs: make(map[K]*pair[K, V], n),
-		list:  list.New[*pair[K, V]](),
+		list:  list.New(),
 	}
 }
 
@@ -74,7 +74,8 @@ func (om *OrderedMap[K, V]) Len() int {
 // The ordering will be oldest to newest, based on when a given key was first set.
 func (om *OrderedMap[K, V]) All(yield func(K, V) bool) bool {
 	for el := om.list.Front(); el != nil; el = el.Next() {
-		if !yield(el.Value.Key, el.Value.Value) {
+		p := el.Value.(*pair[K, V])
+		if !yield(p.Key, p.Value) {
 			return false
 		}
 	}
@@ -85,7 +86,8 @@ func (om *OrderedMap[K, V]) All(yield func(K, V) bool) bool {
 // The ordering will be newest to oldest, based on when a given key was first set.
 func (om *OrderedMap[K, V]) Reverse(yield func(K, V) bool) bool {
 	for el := om.list.Back(); el != nil; el = el.Prev() {
-		if !yield(el.Value.Key, el.Value.Value) {
+		p := el.Value.(*pair[K, V])
+		if !yield(p.Key, p.Value) {
 			return false
 		}
 	}
