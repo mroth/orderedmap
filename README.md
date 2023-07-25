@@ -1,4 +1,6 @@
-# orderedmap
+# orderedmap :ant:
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/mroth/orderedmap.svg)](https://pkg.go.dev/github.com/mroth/orderedmap)
 
 Optimal, constant time implementation of ordered maps for Go with a simple API.
 
@@ -82,15 +84,15 @@ Upon my review, [wk8/go-ordered-map](https://github.com/wk8/go-ordered-map)
 appeared to be the best existing library, offering constant time operations and
 reasonable memory footprint. This module took some design cues from it. That
 said, there are some intentional design differences -- comparing this module
-with it we optimize for:
+with it, we optimize for:
 
-* :bug: Simpler API (far less exposed surface area, more similar to standard library maps).
+* :bug: Simpler API (less exposed surface area, similar to standard library maps).
 * :seedling: Reduced feature set (no built-in YAML serialization, for example).
 * :sparkles: Use new range expressions proposal for iteration.
 * :zap: Equally performant.
 * :zero: Zero dependencies.
 
-### Others
+### Other alternatives
 As per other options, the README from `wk8/go-ordered-map` offers a summary:
 
 * [iancoleman/orderedmap](https://github.com/iancoleman/orderedmap) only accepts
