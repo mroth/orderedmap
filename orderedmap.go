@@ -1,7 +1,13 @@
+// Package orderedmap implements an ordered map, i.e. a map that also keeps track of
+// the order in which keys were inserted.
+//
+// All operations are constant-time.
 package orderedmap
 
 import "container/list"
 
+// OrderedMap is an ordered map that holds key value pairs and is able to
+// iterate over values based on insertion order.
 type OrderedMap[K comparable, V any] struct {
 	pairs map[K]*pair[K, V]
 	list  *list.List
