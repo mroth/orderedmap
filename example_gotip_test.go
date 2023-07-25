@@ -3,11 +3,14 @@
 
 package orderedmap_test
 
-// to run these tests for now:
+// To run these tests for now:
 //
-//	go install golang.org/dl/gotip@latest
-//	gotip download 510541
-//	go test -tags=gotip
+//  go install golang.org/dl/gotip@latest
+//  gotip download 510541
+//  gotip test -tags=gotip
+//
+// You can also use the included .devcontainer to get an environment setup with
+// gotip already set to the proper CL.
 
 import (
 	"fmt"
