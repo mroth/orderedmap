@@ -4,11 +4,12 @@
 
 Optimal, constant time implementation of ordered maps for Go with a simple API.
 
-Designed to work with the new [range expressions proposal][1] for Go iterators.
-That proposal is likely to evolve over time, this module will likewise evolve to
+Designed to work with the new [range-over function iterators][1] Go experiment.
+That [proposal][2] is likely to evolve over time, this module will likewise evolve to
 track it (and thus will not be stabilized until the proposal is accepted).
 
-[1]: https://github.com/golang/go/issues/61405
+[1]: https://go.dev/wiki/RangefuncExperiment
+[2]: https://github.com/golang/go/issues/61405
 
 ## Usage
 
@@ -39,44 +40,34 @@ return pattern to indicate whether a value was found in the map:
 val, ok := om.Get("foo", 1)
 ```
 
-### Iteration
+## Iterators experiment :sparkles:
 
-On gotip you can simply range across the `All()` function, which will yield
-keyvalue pairs based on their insertion order:
+On go1.22 with `GOEXPERIMENT=rangefunc` active, you can simply range across the
+`All()` function, which will yield key value pairs based on their insertion
+order:
 ```go
-for k, v := range om.All {
+for k, v := range om.All() {
     fmt.Printf("k = %v, v = %v\n", k, v)
 }
 ```
 
-See also `.Reverse` to iterate from newest to oldest instead.
+See also `Backward()` to iterate from newest to oldest instead.
 
-Alternatively, on current stable versions of Go, you can already still utilize
-the _yield function_ manually, if you wish to use this module in
-production code today:
 
-```go
-om.All(func(k string, v int) bool {
-    fmt.Printf("k = %v, v = %v", k, v)
-    return true
-})
-```
+### Support
 
-## Support
-
-To use this module with new range syntax, you'll want to use gotip set to the
-proposal CL:
-
-    go install golang.org/dl/gotip@latest && gotip download 510541
+To use this module with new experimental range syntax, you'll need to use go1.22
+and set the environment variable `GOEXPERIMENT=rangefunc`.  The functionality is
+hidden behind build constraints so it will not interfere with normal usage
+otherwise.
 
 That said, you can already use this module today with any version of Go that
-supports generics (>=go1.18), albeit with a different syntax for iteration (see
-["Usage"](#usage)).
+supports generics (>=go1.18), albeit without the handy range iterator support!
 
-To learn more about the [range expressions proposal][1] in general, I recommend
-reading Eli Bendersky's blog post _["Preview: ranging over functions in Go"][2]_.
+To learn more about the [range expressions proposal][2] in general, I recommend
+reading Eli Bendersky's blog post _["Preview: ranging over functions in Go"][3]_.
 
-[2]: https://eli.thegreenplace.net/2023/preview-ranging-over-functions-in-go/
+[3]: https://eli.thegreenplace.net/2023/preview-ranging-over-functions-in-go/
 
 ## Comparison with other Go modules
 
