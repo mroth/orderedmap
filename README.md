@@ -37,7 +37,7 @@ Retrieving a value is equally simple, and uses the same `bool` ok secondary
 return pattern to indicate whether a value was found in the map:
 ```go
 // equivalent of val, ok := om["foo"]
-val, ok := om.Get("foo", 1)
+val, ok := om.Get("foo")
 ```
 
 ## Iterators experiment :sparkles:
