@@ -64,10 +64,6 @@ otherwise.
 That said, you can already use this module today with any version of Go that
 supports generics (>=go1.18), albeit without the handy range iterator support!
 
-To learn more about the [range expressions proposal][2] in general, I recommend
-reading Eli Bendersky's blog post _["Preview: ranging over functions in Go"][3]_.
-
-[3]: https://eli.thegreenplace.net/2023/preview-ranging-over-functions-in-go/
 
 ## Comparison with other Go modules
 
