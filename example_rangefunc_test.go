@@ -1,16 +1,7 @@
-//go:build gotip
-// +build gotip
+//go:build go1.22 && goexperiment.rangefunc
+// +build go1.22,goexperiment.rangefunc
 
 package orderedmap_test
-
-// To run these tests for now:
-//
-//  go install golang.org/dl/gotip@latest
-//  gotip download 510541
-//  gotip test -tags=gotip
-//
-// You can also use the included .devcontainer to get an environment setup with
-// gotip already set to the proper CL.
 
 import (
 	"fmt"
@@ -24,7 +15,7 @@ func ExampleAll() {
 	om.Set("bar", 2)
 	om.Set("baz", 3)
 
-	for k, v := range om.All {
+	for k, v := range om.All() {
 		fmt.Printf("k = %v, v = %v\n", k, v)
 	}
 	//Output:
@@ -33,13 +24,13 @@ func ExampleAll() {
 	// k = baz, v = 3
 }
 
-func ExampleReverse() {
+func ExampleBackward() {
 	om := orderedmap.New[string, int]()
 	om.Set("foo", 1)
 	om.Set("bar", 2)
 	om.Set("baz", 3)
 
-	for k, v := range om.Reverse {
+	for k, v := range om.Backward() {
 		fmt.Printf("k = %v, v = %v\n", k, v)
 	}
 	//Output:
