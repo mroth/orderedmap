@@ -37,7 +37,7 @@ func WithCapacity[K comparable, V any](n int) *OrderedMap[K, V] {
 // Get returns the value stored in the map for a key, or nil if no value is
 // present.
 // The ok result indicates whether value was found in the map.
-func (om *OrderedMap[K, V]) Get(key K) (value any, ok bool) {
+func (om *OrderedMap[K, V]) Get(key K) (value V, ok bool) {
 	if pair, present := om.pairs[key]; present {
 		return pair.Value, true
 	}
