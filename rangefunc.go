@@ -1,5 +1,4 @@
-//go:build go1.22 && goexperiment.rangefunc
-// +build go1.22,goexperiment.rangefunc
+//go:build go1.23
 
 package orderedmap
 

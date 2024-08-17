@@ -4,12 +4,8 @@
 
 Optimal, constant time implementation of ordered maps for Go with a simple API.
 
-Designed to work with the new [range-over function iterators][1] Go experiment.
-That [proposal][2] is likely to evolve over time, this module will likewise evolve to
-track it (and thus will not be stabilized until the proposal is accepted).
+Supports handy new style iteration via the range function in go1.23 and greater.
 
-[1]: https://go.dev/wiki/RangefuncExperiment
-[2]: https://github.com/golang/go/issues/61405
 
 ## Usage
 
@@ -40,11 +36,10 @@ return pattern to indicate whether a value was found in the map:
 val, ok := om.Get("foo")
 ```
 
-## Iterators experiment :sparkles:
+## Iteration :sparkles:
 
-On go1.22 with `GOEXPERIMENT=rangefunc` active, you can simply range across the
-`All()` function, which will yield key value pairs based on their insertion
-order:
+On go1.23, you can simply range across the `All()` function, which will yield
+key value pairs based on their insertion order:
 ```go
 for k, v := range om.All() {
     fmt.Printf("k = %v, v = %v\n", k, v)
@@ -56,13 +51,10 @@ See also `Backward()` to iterate from newest to oldest instead.
 
 ### Support
 
-To use this module with new experimental range syntax, you'll need to use go1.22
-and set the environment variable `GOEXPERIMENT=rangefunc`.  The functionality is
-hidden behind build constraints so it will not interfere with normal usage
-otherwise.
-
-That said, you can already use this module today with any version of Go that
-supports generics (>=go1.18), albeit without the handy range iterator support!
+To use this module with new iterator range syntax, you'll need to use go1.23 or
+greater.  The functionality is hidden behind build constraints so you can use
+this module today with any version of Go that supports generics (>=go1.18),
+albeit without the handy range iterator support!
 
 
 ## Comparison with other Go modules
@@ -75,7 +67,7 @@ with it, we optimize for:
 
 * :bug: Simpler API (less exposed surface area, similar to standard library maps).
 * :seedling: Reduced feature set (no built-in YAML serialization, for example).
-* :sparkles: Use new range expressions proposal for iteration.
+* :sparkles: Use new range expressions for easy iteration on go1.23 and greater.
 * :zap: Equally performant.
 * :zero: Zero dependencies.
 
