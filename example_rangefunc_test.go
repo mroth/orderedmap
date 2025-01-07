@@ -8,7 +8,7 @@ import (
 	"github.com/mroth/orderedmap"
 )
 
-func ExampleAll() {
+func ExampleOrderedMap_All() {
 	om := orderedmap.New[string, int]()
 	om.Set("foo", 1)
 	om.Set("bar", 2)
@@ -23,7 +23,7 @@ func ExampleAll() {
 	// k = baz, v = 3
 }
 
-func ExampleBackward() {
+func ExampleOrderedMap_Backward() {
 	om := orderedmap.New[string, int]()
 	om.Set("foo", 1)
 	om.Set("bar", 2)
