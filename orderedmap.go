@@ -37,8 +37,8 @@ func WithCapacity[K comparable, V any](n int) *OrderedMap[K, V] {
 // Get returns the value stored in the map for a key, or nil if no value is
 // present.
 // The ok result indicates whether value was found in the map.
-func (om *OrderedMap[K, V]) Get(key K) (value V, ok bool) {
-	if pair, present := om.pairs[key]; present {
+func (m *OrderedMap[K, V]) Get(key K) (value V, ok bool) {
+	if pair, present := m.pairs[key]; present {
 		return pair.Value, true
 	}
 
@@ -46,8 +46,8 @@ func (om *OrderedMap[K, V]) Get(key K) (value V, ok bool) {
 }
 
 // Set sets the value for a key.
-func (om *OrderedMap[K, V]) Set(key K, value V) {
-	if pair, present := om.pairs[key]; present {
+func (m *OrderedMap[K, V]) Set(key K, value V) {
+	if pair, present := m.pairs[key]; present {
 		pair.Value = value
 		return
 	}
@@ -56,22 +56,22 @@ func (om *OrderedMap[K, V]) Set(key K, value V) {
 		Key:   key,
 		Value: value,
 	}
-	pair.element = om.list.PushBack(pair)
-	om.pairs[key] = pair
+	pair.element = m.list.PushBack(pair)
+	m.pairs[key] = pair
 }
 
 // Delete deletes the value for a key.
-func (om *OrderedMap[K, V]) Delete(key K) {
-	if pair, present := om.pairs[key]; present {
-		om.list.Remove(pair.element)
-		delete(om.pairs, key)
+func (m *OrderedMap[K, V]) Delete(key K) {
+	if pair, present := m.pairs[key]; present {
+		m.list.Remove(pair.element)
+		delete(m.pairs, key)
 	}
 }
 
 // Len returns the length of the ordered map.
-func (om *OrderedMap[K, V]) Len() int {
-	if om == nil || om.pairs == nil {
+func (m *OrderedMap[K, V]) Len() int {
+	if m == nil || m.pairs == nil {
 		return 0
 	}
-	return len(om.pairs)
+	return len(m.pairs)
 }

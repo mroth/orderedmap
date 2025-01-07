@@ -9,12 +9,12 @@ import (
 )
 
 func ExampleOrderedMap_All() {
-	om := orderedmap.New[string, int]()
-	om.Set("foo", 1)
-	om.Set("bar", 2)
-	om.Set("baz", 3)
+	m := orderedmap.New[string, int]()
+	m.Set("foo", 1)
+	m.Set("bar", 2)
+	m.Set("baz", 3)
 
-	for k, v := range om.All() {
+	for k, v := range m.All() {
 		fmt.Printf("k = %v, v = %v\n", k, v)
 	}
 	//Output:
@@ -24,12 +24,12 @@ func ExampleOrderedMap_All() {
 }
 
 func ExampleOrderedMap_Backward() {
-	om := orderedmap.New[string, int]()
-	om.Set("foo", 1)
-	om.Set("bar", 2)
-	om.Set("baz", 3)
+	m := orderedmap.New[string, int]()
+	m.Set("foo", 1)
+	m.Set("bar", 2)
+	m.Set("baz", 3)
 
-	for k, v := range om.Backward() {
+	for k, v := range m.Backward() {
 		fmt.Printf("k = %v, v = %v\n", k, v)
 	}
 	//Output:

@@ -7,11 +7,11 @@ import (
 )
 
 func Example() {
-	om := orderedmap.New[string, int]()
-	om.Set("foo", 1)
-	om.Set("bar", 2)
+	m := orderedmap.New[string, int]()
+	m.Set("foo", 1)
+	m.Set("bar", 2)
 
-	value, ok := om.Get("foo")
+	value, ok := m.Get("foo")
 	if ok {
 		fmt.Println(value)
 	}

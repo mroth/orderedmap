@@ -14,26 +14,26 @@ Supports handy new style iteration via the range function in go1.23 and greater.
 Creating an ordered map uses any generic type `K comparable, V any`:
 ```go
 // equivalent of: make(map[string]int)
-om := orderedmap.New[string, int]()
+m := orderedmap.New[string, int]()
 ```
 
 You can specify an initial capacity hint:
 ```go
 // equivalent of: make(map[string]int, 1000)
-om := orderedmap.WithCapacity[string, int](1000)
+m := orderedmap.WithCapacity[string, int](1000)
 ```
 
 Setting a value:
 ```go
-// equivalent of om["foo"] = 1
-om.Set("foo", 1)
+// equivalent of m["foo"] = 1
+m.Set("foo", 1)
 ```
 
 Retrieving a value is equally simple, and uses the same `bool` ok secondary
 return pattern to indicate whether a value was found in the map:
 ```go
-// equivalent of val, ok := om["foo"]
-val, ok := om.Get("foo")
+// equivalent of val, ok := m["foo"]
+val, ok := m.Get("foo")
 ```
 
 ## Iteration :sparkles:
@@ -41,7 +41,7 @@ val, ok := om.Get("foo")
 On go1.23, you can simply range across the `All()` function, which will yield
 key value pairs based on their insertion order:
 ```go
-for k, v := range om.All() {
+for k, v := range m.All() {
     fmt.Printf("k = %v, v = %v\n", k, v)
 }
 ```

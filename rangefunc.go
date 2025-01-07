@@ -4,11 +4,11 @@ package orderedmap
 
 import "iter"
 
-// All returns the yield function suitable for ranging over the ordered map.
-// The ordering will be oldest to newest, based on when a given key was first set.
-func (om *OrderedMap[K, V]) All() iter.Seq2[K, V] {
+// All returns an iterator over key-value pairs from m.
+// The ordering will be oldest to newest, based on when a key was first set.
+func (m *OrderedMap[K, V]) All() iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
-		for el := om.list.Front(); el != nil; el = el.Next() {
+		for el := m.list.Front(); el != nil; el = el.Next() {
 			p := el.Value.(*pair[K, V])
 			if !yield(p.Key, p.Value) {
 				return
@@ -17,11 +17,11 @@ func (om *OrderedMap[K, V]) All() iter.Seq2[K, V] {
 	}
 }
 
-// Backward returns the yield function suitable for ranging over the ordered map in reverse.
-// The ordering will be newest to oldest, based on when a given key was first set.
-func (om *OrderedMap[K, V]) Backward() iter.Seq2[K, V] {
+// Backward returns an iterator over key-value pairs from m in reverse.
+// The ordering will be newest to oldest, based on when a key was first set.
+func (m *OrderedMap[K, V]) Backward() iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
-		for el := om.list.Back(); el != nil; el = el.Prev() {
+		for el := m.list.Back(); el != nil; el = el.Prev() {
 			p := el.Value.(*pair[K, V])
 			if !yield(p.Key, p.Value) {
 				return
