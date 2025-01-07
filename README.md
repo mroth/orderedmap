@@ -46,7 +46,8 @@ for k, v := range m.All() {
 }
 ```
 
-See also `Backward()` to iterate from newest to oldest instead.
+See also `Backward()` to iterate from newest to oldest instead, as well as
+ included `Keys()` and `Values()` iterators.
 
 
 ### Support

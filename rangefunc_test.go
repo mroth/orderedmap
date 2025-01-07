@@ -37,3 +37,33 @@ func ExampleOrderedMap_Backward() {
 	// k = bar, v = 2
 	// k = foo, v = 1
 }
+
+func ExampleOrderedMap_Keys() {
+	m := orderedmap.New[string, int]()
+	m.Set("foo", 1)
+	m.Set("bar", 2)
+	m.Set("baz", 3)
+
+	for k := range m.Keys() {
+		fmt.Println(k)
+	}
+	//Output:
+	// foo
+	// bar
+	// baz
+}
+
+func ExampleOrderedMap_Values() {
+	m := orderedmap.New[string, string]()
+	m.Set("foo", "uno")
+	m.Set("bar", "dos")
+	m.Set("baz", "tres")
+
+	for v := range m.Values() {
+		fmt.Println(v)
+	}
+	//Output:
+	// uno
+	// dos
+	// tres
+}
