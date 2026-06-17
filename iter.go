@@ -2,6 +2,17 @@ package orderedmap
 
 import "iter"
 
+// Collect builds a new OrderedMap from the key-value pairs in seq, preserving
+// the order in which seq yields them. If seq yields a key more than once, the
+// last value wins and the key keeps its first-seen position, matching Set.
+func Collect[K comparable, V any](seq iter.Seq2[K, V]) *OrderedMap[K, V] {
+	m := New[K, V]()
+	for k, v := range seq {
+		m.Set(k, v)
+	}
+	return m
+}
+
 // All returns an iterator over key-value pairs from m.
 // The ordering will be oldest to newest, based on when a key was first set.
 func (m *OrderedMap[K, V]) All() iter.Seq2[K, V] {

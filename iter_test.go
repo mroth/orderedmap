@@ -2,6 +2,8 @@ package orderedmap_test
 
 import (
 	"fmt"
+	"slices"
+	"testing"
 
 	"github.com/mroth/orderedmap"
 )
@@ -64,4 +66,55 @@ func ExampleOrderedMap_Values() {
 	// uno
 	// dos
 	// tres
+}
+
+func TestCollect(t *testing.T) {
+	type pair struct {
+		k string
+		v int
+	}
+	tests := []struct {
+		name     string
+		pairs    []pair
+		wantKeys []string
+		wantVals []int
+	}{
+		{
+			name:     "preserves source order",
+			pairs:    []pair{{"foo", 1}, {"bar", 2}, {"hey", 3}},
+			wantKeys: []string{"foo", "bar", "hey"},
+			wantVals: []int{1, 2, 3},
+		},
+		{
+			name:     "duplicate key keeps position, last value wins",
+			pairs:    []pair{{"foo", 1}, {"bar", 2}, {"foo", 9}},
+			wantKeys: []string{"foo", "bar"},
+			wantVals: []int{9, 2},
+		},
+		{
+			name:     "empty",
+			pairs:    nil,
+			wantKeys: nil,
+			wantVals: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := orderedmap.Collect(func(yield func(string, int) bool) {
+				for _, p := range tt.pairs {
+					if !yield(p.k, p.v) {
+						return
+					}
+				}
+			})
+
+			if got := slices.Collect(m.Keys()); !slices.Equal(got, tt.wantKeys) {
+				t.Errorf("keys = %v, want %v", got, tt.wantKeys)
+			}
+			if got := slices.Collect(m.Values()); !slices.Equal(got, tt.wantVals) {
+				t.Errorf("values = %v, want %v", got, tt.wantVals)
+			}
+		})
+	}
 }
