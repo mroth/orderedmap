@@ -68,6 +68,14 @@ func (m *OrderedMap[K, V]) Delete(key K) {
 	}
 }
 
+// Clear removes all entries from the map, leaving it empty.
+func (m *OrderedMap[K, V]) Clear() {
+	for k := range m.pairs {
+		delete(m.pairs, k)
+	}
+	m.list.Init()
+}
+
 // Len returns the length of the ordered map.
 func (m *OrderedMap[K, V]) Len() int {
 	if m == nil || m.pairs == nil {
