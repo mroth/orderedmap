@@ -8,6 +8,8 @@ import "container/list"
 
 // OrderedMap is an ordered map that holds key value pairs and is able to
 // iterate over values based on insertion order.
+//
+// An OrderedMap is not safe for concurrent use by multiple goroutines.
 type OrderedMap[K comparable, V any] struct {
 	pairs map[K]*pair[K, V]
 	list  *list.List
@@ -34,12 +36,12 @@ func WithCapacity[K comparable, V any](n int) *OrderedMap[K, V] {
 	}
 }
 
-// Get returns the value stored in the map for a key, or nil if no value is
-// present.
+// Get returns the value stored in the map for a key, or the zero value of V if
+// no value is present.
 // The ok result indicates whether value was found in the map.
 func (m *OrderedMap[K, V]) Get(key K) (value V, ok bool) {
-	if pair, present := m.pairs[key]; present {
-		return pair.Value, true
+	if p, present := m.pairs[key]; present {
+		return p.Value, true
 	}
 
 	return
@@ -47,23 +49,23 @@ func (m *OrderedMap[K, V]) Get(key K) (value V, ok bool) {
 
 // Set sets the value for a key.
 func (m *OrderedMap[K, V]) Set(key K, value V) {
-	if pair, present := m.pairs[key]; present {
-		pair.Value = value
+	if p, present := m.pairs[key]; present {
+		p.Value = value
 		return
 	}
 
-	pair := &pair[K, V]{
+	p := &pair[K, V]{
 		Key:   key,
 		Value: value,
 	}
-	pair.element = m.list.PushBack(pair)
-	m.pairs[key] = pair
+	p.element = m.list.PushBack(p)
+	m.pairs[key] = p
 }
 
 // Delete deletes the value for a key.
 func (m *OrderedMap[K, V]) Delete(key K) {
-	if pair, present := m.pairs[key]; present {
-		m.list.Remove(pair.element)
+	if p, present := m.pairs[key]; present {
+		m.list.Remove(p.element)
 		delete(m.pairs, key)
 	}
 }
