@@ -53,6 +53,41 @@ func TestClear(t *testing.T) {
 		t.Errorf("after Clear+Set: got %v, ok = %v, want 4, true", got, ok)
 	}
 }
+
+func TestDelete(t *testing.T) {
+	m := New[string, int]()
+	m.Set("foo", 1)
+	m.Set("bar", 2)
+	m.Set("hey", 3)
+
+	// Deleting an existing key removes it and decrements Len.
+	m.Delete("bar")
+	if _, ok := m.Get("bar"); ok {
+		t.Error("Get(\"bar\") after Delete returned ok = true, want false")
+	}
+	if l := m.Len(); l != 2 {
+		t.Errorf("after Delete: got Len() = %v, want 2", l)
+	}
+
+	// Deleting an absent key is a no-op.
+	m.Delete("missing")
+	if l := m.Len(); l != 2 {
+		t.Errorf("after no-op Delete: got Len() = %v, want 2", l)
+	}
+
+	// Surviving keys are untouched.
+	if got, ok := m.Get("foo"); !ok || got != 1 {
+		t.Errorf("got %v, %v; want 1, true", got, ok)
+	}
+}
+
+func TestLenNil(t *testing.T) {
+	var m *OrderedMap[string, int]
+	if l := m.Len(); l != 0 {
+		t.Errorf("nil map Len() = %v, want 0", l)
+	}
+}
+
 func BenchmarkSet(b *testing.B) {
 	m := New[string, int]()
 	for i := 0; i < b.N; i++ {
