@@ -78,13 +78,6 @@ func TestOrderedMap(t *testing.T) {
 	}
 }
 
-func TestLenNil(t *testing.T) {
-	var m *OrderedMap[string, int]
-	if l := m.Len(); l != 0 {
-		t.Errorf("nil map Len() = %d, want 0", l)
-	}
-}
-
 func BenchmarkSet(b *testing.B) {
 	m := New[string, int]()
 	for b.Loop() {

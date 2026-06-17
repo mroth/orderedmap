@@ -76,8 +76,5 @@ func (m *OrderedMap[K, V]) Clear() {
 
 // Len returns the length of the ordered map.
 func (m *OrderedMap[K, V]) Len() int {
-	if m == nil || m.pairs == nil {
-		return 0
-	}
 	return len(m.pairs)
 }
