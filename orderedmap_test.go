@@ -1,90 +1,87 @@
 package orderedmap
 
 import (
+	"slices"
 	"testing"
 )
 
-func TestBasicSetGetLen(t *testing.T) {
-	testcases := []struct {
-		k         string
-		v         int
-		expectLen int
+func TestOrderedMap(t *testing.T) {
+	tests := []struct {
+		name     string
+		build    func(m *OrderedMap[string, int])
+		wantKeys []string
+		wantVals []int
 	}{
-		{k: "foo", v: 1, expectLen: 1},
-		{k: "bar", v: 2, expectLen: 2},
-		{k: "hey", v: 3, expectLen: 3},
-		{k: "foo", v: 9, expectLen: 3}, // reset
+		{
+			name:     "set keeps insertion order",
+			build:    func(m *OrderedMap[string, int]) { m.Set("foo", 1); m.Set("bar", 2) },
+			wantKeys: []string{"foo", "bar"},
+			wantVals: []int{1, 2},
+		},
+		{
+			name:     "overwrite updates value and keeps position",
+			build:    func(m *OrderedMap[string, int]) { m.Set("foo", 1); m.Set("bar", 2); m.Set("foo", 9) },
+			wantKeys: []string{"foo", "bar"},
+			wantVals: []int{9, 2},
+		},
+		{
+			name:     "delete removes a key and preserves order",
+			build:    func(m *OrderedMap[string, int]) { m.Set("foo", 1); m.Set("bar", 2); m.Set("hey", 3); m.Delete("bar") },
+			wantKeys: []string{"foo", "hey"},
+			wantVals: []int{1, 3},
+		},
+		{
+			name:     "delete of an absent key is a no-op",
+			build:    func(m *OrderedMap[string, int]) { m.Set("foo", 1); m.Delete("missing") },
+			wantKeys: []string{"foo"},
+			wantVals: []int{1},
+		},
+		{
+			name:     "clear empties the map but keeps it usable",
+			build:    func(m *OrderedMap[string, int]) { m.Set("foo", 1); m.Set("bar", 2); m.Clear(); m.Set("baz", 3) },
+			wantKeys: []string{"baz"},
+			wantVals: []int{3},
+		},
+		{
+			name:     "empty map",
+			build:    func(m *OrderedMap[string, int]) {},
+			wantKeys: nil,
+			wantVals: nil,
+		},
 	}
 
-	m := New[string, int]()
-	for _, tt := range testcases {
-		m.Set(tt.k, tt.v)
-		want := tt.v
-		got, ok := m.Get(tt.k)
-		if !ok || got != want {
-			t.Errorf("got %v, want %v, ok = %v", got, want, ok)
-		}
-		if l := m.Len(); l != tt.expectLen {
-			t.Errorf("got Len() = %v, expected %v", l, tt.expectLen)
-		}
-	}
-}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := New[string, int]()
+			tt.build(m)
 
-func TestClear(t *testing.T) {
-	m := New[string, int]()
-	m.Set("foo", 1)
-	m.Set("bar", 2)
-	m.Set("hey", 3)
-
-	m.Clear()
-	if l := m.Len(); l != 0 {
-		t.Errorf("after Clear: got Len() = %v, want 0", l)
-	}
-	if _, ok := m.Get("foo"); ok {
-		t.Error("after Clear: Get(\"foo\") returned ok = true, want false")
-	}
-
-	// The map must remain usable after clearing.
-	m.Set("baz", 4)
-	if l := m.Len(); l != 1 {
-		t.Errorf("after Clear+Set: got Len() = %v, want 1", l)
-	}
-	if got, ok := m.Get("baz"); !ok || got != 4 {
-		t.Errorf("after Clear+Set: got %v, ok = %v, want 4, true", got, ok)
-	}
-}
-
-func TestDelete(t *testing.T) {
-	m := New[string, int]()
-	m.Set("foo", 1)
-	m.Set("bar", 2)
-	m.Set("hey", 3)
-
-	// Deleting an existing key removes it and decrements Len.
-	m.Delete("bar")
-	if _, ok := m.Get("bar"); ok {
-		t.Error("Get(\"bar\") after Delete returned ok = true, want false")
-	}
-	if l := m.Len(); l != 2 {
-		t.Errorf("after Delete: got Len() = %v, want 2", l)
-	}
-
-	// Deleting an absent key is a no-op.
-	m.Delete("missing")
-	if l := m.Len(); l != 2 {
-		t.Errorf("after no-op Delete: got Len() = %v, want 2", l)
-	}
-
-	// Surviving keys are untouched.
-	if got, ok := m.Get("foo"); !ok || got != 1 {
-		t.Errorf("got %v, %v; want 1, true", got, ok)
+			if got := slices.Collect(m.Keys()); !slices.Equal(got, tt.wantKeys) {
+				t.Errorf("keys = %v, want %v", got, tt.wantKeys)
+			}
+			if got := slices.Collect(m.Values()); !slices.Equal(got, tt.wantVals) {
+				t.Errorf("values = %v, want %v", got, tt.wantVals)
+			}
+			if got := m.Len(); got != len(tt.wantKeys) {
+				t.Errorf("Len() = %d, want %d", got, len(tt.wantKeys))
+			}
+			// Every expected key round-trips through Get...
+			for i, k := range tt.wantKeys {
+				if v, ok := m.Get(k); !ok || v != tt.wantVals[i] {
+					t.Errorf("Get(%q) = %v, %v; want %v, true", k, v, ok, tt.wantVals[i])
+				}
+			}
+			// ...and an unknown key reports not-present.
+			if _, ok := m.Get("absent"); ok {
+				t.Error("Get(absent) returned ok = true, want false")
+			}
+		})
 	}
 }
 
 func TestLenNil(t *testing.T) {
 	var m *OrderedMap[string, int]
 	if l := m.Len(); l != 0 {
-		t.Errorf("nil map Len() = %v, want 0", l)
+		t.Errorf("nil map Len() = %d, want 0", l)
 	}
 }
 
