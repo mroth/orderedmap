@@ -4,7 +4,7 @@
 
 Optimal, constant time implementation of ordered maps for Go with a simple API.
 
-Supports handy new style iteration via the range function in go1.23 and greater.
+Supports modern range-over-function iteration via the standard library `iter` package.
 
 
 ## Usage
@@ -36,26 +36,30 @@ return pattern to indicate whether a value was found in the map:
 val, ok := m.Get("foo")
 ```
 
+The remaining operations mirror the standard library map:
+```go
+m.Delete("foo") // equivalent of delete(m, "foo")
+m.Clear()       // equivalent of clear(m)
+n := m.Len()    // equivalent of len(m)
+```
+
 ## Iteration :sparkles:
 
-On go1.23, you can simply range across the `All()` function, which will yield
-key value pairs based on their insertion order:
+You can simply range across the `All()` function, which will yield key value
+pairs based on their insertion order:
 ```go
 for k, v := range m.All() {
     fmt.Printf("k = %v, v = %v\n", k, v)
 }
 ```
 
-See also `Backward()` to iterate from newest to oldest instead, as well as
- included `Keys()` and `Values()` iterators.
+See also `Backward()` to iterate from newest to oldest instead, as well as the
+included `Keys()` and `Values()` iterators.
 
 
 ### Support
 
-To use this module with new iterator range syntax, you'll need to use go1.23 or
-greater.  The functionality is hidden behind build constraints so you can use
-this module today with any version of Go that supports generics (>=go1.18),
-albeit without the handy range iterator support!
+This module requires go1.24 or greater.
 
 
 ## Comparison with other Go modules
@@ -68,7 +72,7 @@ with it, we optimize for:
 
 * :bug: Simpler API (less exposed surface area, similar to standard library maps).
 * :seedling: Reduced feature set (no built-in YAML serialization, for example).
-* :sparkles: Use new range expressions for easy iteration on go1.23 and greater.
+* :sparkles: Use modern range-over-function expressions for easy iteration.
 * :zap: Equally performant.
 * :zero: Zero dependencies.
 
