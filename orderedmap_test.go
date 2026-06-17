@@ -90,7 +90,7 @@ func TestLenNil(t *testing.T) {
 
 func BenchmarkSet(b *testing.B) {
 	m := New[string, int]()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		m.Set("foo", 1)
 	}
 }
@@ -98,7 +98,7 @@ func BenchmarkSet(b *testing.B) {
 func BenchmarkGet(b *testing.B) {
 	m := New[string, int]()
 	m.Set("foo", 1)
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		_, _ = m.Get("foo")
 	}
 }

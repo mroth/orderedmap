@@ -1,5 +1,3 @@
-//go:build go1.23
-
 package orderedmap_test
 
 import (

@@ -70,9 +70,7 @@ func (m *OrderedMap[K, V]) Delete(key K) {
 
 // Clear removes all entries from the map, leaving it empty.
 func (m *OrderedMap[K, V]) Clear() {
-	for k := range m.pairs {
-		delete(m.pairs, k)
-	}
+	clear(m.pairs)
 	m.list.Init()
 }
 
